@@ -1,0 +1,39 @@
+const Path = require('path');
+const Hapi = require('hapi');
+const Inert = require('inert');
+const Blipp = require('blipp');
+const SwaggerEditor = require('./modules/swagger-editor');
+
+const server = new Hapi.Server({
+    connections: {
+        routes: {
+            files: {
+                relativeTo: Path.join(__dirname, 'modules/swagger-editor')
+            }
+        }
+    }
+});
+server.connection({ port: 3000 });
+
+server.register([Inert, Blipp, SwaggerEditor], () => {});
+
+// server.route({
+//     method: 'GET',
+//     path: '/{param*}',
+//     handler: {
+//         directory: {
+//             path: '.',
+//             redirectToSlash: true,
+//             index: true
+//         }
+//     }
+// });
+
+server.start((err) => {
+
+    if (err) {
+        throw err;
+    }
+
+    console.log('Server running at:', server.info.uri);
+});

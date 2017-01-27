@@ -4,7 +4,8 @@
   "description": "An OpenAPI Toolbox",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "./node_modules/.bin/nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,10 @@
     "blipp": "^2.3.0",
     "hapi": "^16.1.0",
     "inert": "^4.1.0",
+    "nodegit": "^0.16.0",
     "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
   }
 }

@@ -1,0 +1,1117 @@
+swagger: '2.0'
+info:
+  description: My Spectrum phase one Adapticus API
+  version: 1.0.0
+  title: My Spectrum Adapticus
+  contact:
+    email: gregory.buchenberger@charter.com
+  license:
+    name: UNLICENCED
+tags:
+  - name: billing
+    description: Billing endpoints
+  - name: accounts
+    description: Accounts endpoints
+schemes:
+  - https
+  - http
+host: 'localhost:8000'
+basePath: /care/api/v1
+paths:
+  /GetCustomerInfo:
+    post:
+      tags:
+        - accounts
+      summary: gets customer information
+      operationId: getCustomerInfo
+      description: |
+        provides customer information
+      produces:
+        - application/json
+      parameters:
+        - name: customerInfoRequest
+          in: body
+          description: customer info request
+          required: true
+          schema:
+            $ref: '#/definitions/CommonRequest'
+      responses:
+        '200':
+          description: customer information
+          schema:
+            $ref: '#/definitions/CustomerInfo'
+        '400':
+          description: bad input parameter
+  /billing/summary:
+    post:
+      tags:
+        - billing
+      summary: gets billing summary
+      operationId: getBillingSummary
+      description: |
+        Provides a billing summary.
+      produces:
+        - application/json
+      parameters:
+        - name: billingSummaryRequest
+          in: body
+          description: billing summary request
+          required: true
+          schema:
+            $ref: '#/definitions/CommonRequest'
+      responses:
+        '200':
+          description: billing summary
+          schema:
+            $ref: '#/definitions/BillingSummaryResponse'
+        '400':
+          description: bad input parameter
+  /billing/pdfstatement:
+    post:
+      tags:
+        - billing
+      summary: gets PDF statement
+      operationId: getPDFStatement
+      description: |
+        Provides a PDF statement.
+      consumes:
+        - application/json
+      produces:
+        - application/pdf
+      parameters:
+        - name: pdfStatementRequest
+          in: body
+          description: PDF statement request
+          required: true
+          schema:
+            $ref: '#/definitions/CommonRequest'
+      responses:
+        '200':
+          description: PDF statement
+          schema:
+            type: file
+        '400':
+          description: bad input parameter
+  /billing/settings:
+    post:
+      tags:
+        - billing
+      summary: sets billing settings
+      operationId: setBillingSettings
+      description: |
+        Sets billing settings.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: billingSettingsRequest
+          in: body
+          description: billing settings request
+          required: true
+          schema:
+            $ref: '#/definitions/BillingSettingsRequest'
+      responses:
+        '200':
+          description: billing settings response
+          schema:
+            $ref: '#/definitions/BillingSettingsResponse'
+        '400':
+          description: bad input parameter
+  /billing/statementlist:
+    post:
+      tags:
+        - billing
+      summary: gets pdf statement list
+      operationId: listPDFStatements
+      description: |
+        Provides a list of statements.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: pdfStatementRequest
+          in: body
+          description: PDF statement request
+          required: true
+          schema:
+            $ref: '#/definitions/CommonRequest'
+      responses:
+        '200':
+          description: statement list
+          schema:
+            $ref: '#/definitions/PDFStatementList'
+        '400':
+          description: bad input parameter
+definitions:
+  CommonRequest:
+    type: object
+    properties:
+      deviceid:
+        description: >-
+          The device identifier is a combination of <Make><Model>_<OS name with
+          OS version>_<Screen Resolution>_<Application Name>_<Application
+          version>.
+        type: string
+        default: SamsungGalaxy^^^Note 3^^^Android^^^4.4.2^^^1080x1920^^^CareApp^^^0.8.1
+      appversion:
+        description: application version
+        type: string
+        default: 1.0.0
+      data:
+        type: object
+        properties:
+          token:
+            description: Token recieved as part of the login response
+            type: string
+            default: >-
+              eL1nowZABdQg4RX2xp2CmZoLRSEeWxUhZiKsCOgFH+NTicGGfZ9ThR1r3QpTQn8YmU63R9ueYVgoI7EApzxyj5CuHHJ7AdGQD30zg69dL4v1Bo8OGuLAXR1fvIS5HwRZzGwYPk8bw9eJMb8W2tra3qRNakQWAtgthLdbUGwkhjsvkssCFSb3vQ==
+        required:
+          - token
+    required:
+      - deviceid
+      - appversion
+      - data
+  BillingSettingsRequest:
+    type: object
+    properties:
+      deviceid:
+        description: >-
+          The device identifier is a combination of <Make><Model>_<OS name with
+          OS version>_<Screen Resolution>_<Application Name>_<Application
+          version>.
+        type: string
+        default: SamsungGalaxy^^^Note 3^^^Android^^^4.4.2^^^1080x1920^^^CareApp^^^0.8.1
+      appversion:
+        description: application version
+        type: string
+        default: 1.0.0
+      data:
+        type: object
+        properties:
+          paperlessType:
+            description: Paperless statement enable type
+            type: string
+            default: P
+            enum:
+              - E
+              - P
+              - M
+              - '1'
+              - '9'
+          token:
+            description: Token recieved as part of the login response
+            type: string
+            default: >-
+              eL1nowZABdQg4RX2xp2CmZoLRSEeWxUhZiKsCOgFH+NTicGGfZ9ThR1r3QpTQn8YmU63R9ueYVgoI7EApzxyj5CuHHJ7AdGQD30zg69dL4v1Bo8OGuLAXR1fvIS5HwRZzGwYPk8bw9eJMb8W2tra3qRNakQWAtgthLdbUGwkhjsvkssCFSb3vQ==
+        required:
+          - token
+    required:
+      - deviceid
+      - appversion
+      - data
+  CustomerInfo:
+    type: object
+    properties:
+      statuscode:
+        type: string
+      message:
+        type: string
+      tid:
+        type: string
+      data:
+        type: object
+        properties:
+          requiresbillingtermsupdate:
+            type: boolean
+          blacklisted:
+            type: boolean
+          token:
+            type: string
+          analyticuserid:
+            type: string
+          contentmodified:
+            type: boolean
+          operationSuccessful:
+            type: boolean
+          authorizationFailed:
+            type: boolean
+          customer:
+            type: object
+            properties:
+              customerGuid:
+                type: string
+              operationSuccessful:
+                type: boolean
+              authorizationFailed:
+                type: boolean
+              account:
+                type: object
+                properties:
+                  accountNumber:
+                    type: string
+                  soadivisionID:
+                    type: string
+                  division:
+                    type: object
+                    properties:
+                      abbreviation:
+                        type: string
+                      activeDirectoryOrgUnit:
+                        type: string
+                      divisionID:
+                        type: string
+                      parentDivisionID:
+                        type: string
+                      timeZoneID:
+                        type: string
+                      urlSlug:
+                        type: string
+                      sortOrder:
+                        type: integer
+                      billingSystemType:
+                        type: string
+                      description:
+                        type: string
+                      timeZone:
+                        type: 'null'
+                    required:
+                      - abbreviation
+                      - activeDirectoryOrgUnit
+                      - divisionID
+                      - parentDivisionID
+                      - timeZoneID
+                      - urlSlug
+                      - sortOrder
+                      - billingSystemType
+                      - description
+                      - timeZone
+                  equipmentList:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        model:
+                          type: 'null'
+                        isUserNameDefinable:
+                          type: boolean
+                        equipmentType:
+                          type: string
+                        mac:
+                          type: string
+                        manufacturer:
+                          type: 'null'
+                        equipmentTypeImage:
+                          type: 'null'
+                        serviceList:
+                          type: array
+                          items: {}
+                        standardServiceList:
+                          type: array
+                          items: {}
+                        primaryStandardCode:
+                          type: 'null'
+                        isDigitalVideoRecorder:
+                          type: boolean
+                        isHighDefinition:
+                          type: boolean
+                        oidSsid:
+                          type: 'null'
+                        oidPsk:
+                          type: 'null'
+                        oidSsid5G:
+                          type: 'null'
+                        oidPsk5G:
+                          type: 'null'
+                        isWifiManagementSupported:
+                          type: string
+                        serialNumber:
+                          type: string
+                        description:
+                          type: 'null'
+                      required:
+                        - model
+                        - isUserNameDefinable
+                        - equipmentType
+                        - mac
+                        - manufacturer
+                        - equipmentTypeImage
+                        - serviceList
+                        - standardServiceList
+                        - primaryStandardCode
+                        - isDigitalVideoRecorder
+                        - isHighDefinition
+                        - oidSsid
+                        - oidPsk
+                        - oidSsid5G
+                        - oidPsk5G
+                        - isWifiManagementSupported
+                        - serialNumber
+                        - description
+                  appointmentList:
+                    type: 'null'
+                  customer:
+                    type: object
+                    properties:
+                      firstName:
+                        type: string
+                      lastName:
+                        type: string
+                      businessName:
+                        type: string
+                      emailAddress:
+                        type: 'null'
+                      middleInitial:
+                        type: 'null'
+                      socialSecurityNumber:
+                        type: 'null'
+                      driverLicence:
+                        type: 'null'
+                      dateOfBirth:
+                        type: 'null'
+                      fullName:
+                        type: string
+                    required:
+                      - firstName
+                      - lastName
+                      - businessName
+                      - emailAddress
+                      - middleInitial
+                      - socialSecurityNumber
+                      - driverLicence
+                      - dateOfBirth
+                      - fullName
+                  serviceAddress:
+                    type: object
+                    properties:
+                      addressLine1:
+                        type: string
+                      addressLine2:
+                        type: 'null'
+                      city:
+                        type: string
+                      zipCode:
+                        type: string
+                      locationID:
+                        type: string
+                      state:
+                        type: string
+                    required:
+                      - addressLine1
+                      - addressLine2
+                      - city
+                      - zipCode
+                      - locationID
+                      - state
+                  accountDetails:
+                    type: object
+                    properties:
+                      billingCompany:
+                        type: string
+                      homePhone:
+                        type: string
+                      businessPhone:
+                        type: 'null'
+                      oldBillingDivision:
+                        type: string
+                      customerType:
+                        type: string
+                      otherPhone:
+                        type: 'null'
+                      icomsdivisionID:
+                        type: string
+                      nodeNumber:
+                        type: string
+                      hubNumber:
+                        type: string
+                      primaryLocator:
+                        type: string
+                      secondaryLocator:
+                        type: string
+                      cpni:
+                        type: string
+                      billingDivision:
+                        type: string
+                      billingFranchise:
+                        type: string
+                      oldBillingSite:
+                        type: string
+                      oldBillingSiteDescription:
+                        type: string
+                      oldSOADivisionID:
+                        type: string
+                      password:
+                        type: string
+                    required:
+                      - billingCompany
+                      - homePhone
+                      - businessPhone
+                      - oldBillingDivision
+                      - customerType
+                      - otherPhone
+                      - icomsdivisionID
+                      - nodeNumber
+                      - hubNumber
+                      - primaryLocator
+                      - secondaryLocator
+                      - cpni
+                      - billingDivision
+                      - billingFranchise
+                      - oldBillingSite
+                      - oldBillingSiteDescription
+                      - oldSOADivisionID
+                      - password
+                  soadivision:
+                    type: object
+                    properties:
+                      soadivisionID:
+                        type: string
+                      timeZoneOffset:
+                        type: integer
+                      siteID:
+                        type: string
+                      bpssiteCode:
+                        type: string
+                      divisionName:
+                        type: string
+                      billingSystem:
+                        type: string
+                      billingSystemType:
+                        type: string
+                      description:
+                        type: string
+                      state:
+                        type: string
+                    required:
+                      - soadivisionID
+                      - timeZoneOffset
+                      - siteID
+                      - bpssiteCode
+                      - divisionName
+                      - billingSystem
+                      - billingSystemType
+                      - description
+                      - state
+                  businessName:
+                    type: 'null'
+                  accountServices:
+                    type: object
+                    properties:
+                      standardServiceList:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            standardCode:
+                              type: string
+                            standardType:
+                              type: string
+                            billingSystemCode:
+                              type: string
+                            billingSystemCodeSet:
+                              type: array
+                              items:
+                                type: string
+                            description:
+                              type: string
+                          required:
+                            - standardCode
+                            - standardType
+                            - billingSystemCode
+                            - billingSystemCodeSet
+                            - description
+                      hasPhoneService:
+                        type: boolean
+                      hasInternetService:
+                        type: boolean
+                      hasVideoService:
+                        type: boolean
+                      hasVoiceMail:
+                        type: boolean
+                      hasDVRService:
+                        type: boolean
+                      hasHomeSecurity:
+                        type: boolean
+                    required:
+                      - standardServiceList
+                      - hasPhoneService
+                      - hasInternetService
+                      - hasVideoService
+                      - hasVoiceMail
+                      - hasDVRService
+                      - hasHomeSecurity
+                  areEquipmentActionsAvailable:
+                    type: boolean
+                  isEquipmentDiagnosticAvailable:
+                    type: boolean
+                  bpsaccount:
+                    type: object
+                    properties:
+                      accountNumber:
+                        type: string
+                      siteID:
+                        type: string
+                    required:
+                      - accountNumber
+                      - siteID
+                  accountStatusType:
+                    type: string
+                  accountGUID:
+                    type: string
+                  formattedAccountNumber:
+                    type: string
+                  businessType:
+                    type: string
+                required:
+                  - accountNumber
+                  - soadivisionID
+                  - division
+                  - equipmentList
+                  - appointmentList
+                  - customer
+                  - serviceAddress
+                  - accountDetails
+                  - soadivision
+                  - businessName
+                  - accountServices
+                  - areEquipmentActionsAvailable
+                  - isEquipmentDiagnosticAvailable
+                  - bpsaccount
+                  - accountStatusType
+                  - accountGUID
+                  - formattedAccountNumber
+                  - businessType
+              firstName:
+                type: string
+              lastName:
+                type: string
+              businessName:
+                type: 'null'
+              emailAddress:
+                type: string
+              logonID:
+                type: string
+              dsbcustomerRoleName:
+                type: string
+              cpniverified:
+                type: boolean
+              termsOfUseVersion:
+                type: string
+              applicationPermissions:
+                type: object
+                properties:
+                  allowTVE:
+                    type: boolean
+                  allowWIFI:
+                    type: boolean
+                  allowWSC:
+                    type: boolean
+                  allowWSS:
+                    type: boolean
+                  allowBHTVOVP:
+                    type: boolean
+                  allowMYBHN:
+                    type: boolean
+                  allowGadget:
+                    type: boolean
+                  allowPhoneTools:
+                    type: boolean
+                  dsbvalue:
+                    type: boolean
+                required:
+                  - allowTVE
+                  - allowWIFI
+                  - allowWSC
+                  - allowWSS
+                  - allowBHTVOVP
+                  - allowMYBHN
+                  - allowGadget
+                  - allowPhoneTools
+                  - dsbvalue
+              message:
+                type: 'null'
+              locale:
+                type: string
+              status:
+                type: string
+            required:
+              - customerGuid
+              - operationSuccessful
+              - authorizationFailed
+              - account
+              - firstName
+              - lastName
+              - businessName
+              - emailAddress
+              - logonID
+              - dsbcustomerRoleName
+              - cpniverified
+              - termsOfUseVersion
+              - applicationPermissions
+              - message
+              - locale
+              - status
+          accountDisabled:
+            type: boolean
+          customerDisabled:
+            type: boolean
+          preLogonID:
+            type: 'null'
+          preLogonKey:
+            type: integer
+          invalidBusinessType:
+            type: boolean
+          asyncReconcile:
+            type: boolean
+          ebppuserRegistered:
+            type: boolean
+          reconcileFailed:
+            type: boolean
+          requiresEmailVerification:
+            type: boolean
+          requiresProfileUpdates:
+            type: boolean
+          requiresTermsOfService:
+            type: boolean
+          requiresPasswordChange:
+            type: boolean
+          requiresSecurityQuestionsChange:
+            type: boolean
+          message:
+            type: 'null'
+          error:
+            type: 'null'
+        required:
+          - requiresbillingtermsupdate
+          - blacklisted
+          - token
+          - analyticuserid
+          - contentmodified
+          - operationSuccessful
+          - authorizationFailed
+          - customer
+          - accountDisabled
+          - customerDisabled
+          - preLogonID
+          - preLogonKey
+          - invalidBusinessType
+          - asyncReconcile
+          - ebppuserRegistered
+          - reconcileFailed
+          - requiresEmailVerification
+          - requiresProfileUpdates
+          - requiresTermsOfService
+          - requiresPasswordChange
+          - requiresSecurityQuestionsChange
+          - message
+          - error
+    required:
+      - statuscode
+      - message
+      - tid
+      - data
+  BillingSummaryResponse:
+    type: object
+    title: BillingSummaryResponse schema.
+    description: An explanation about the purpose of this instance.
+    properties:
+      statuscode:
+        type: string
+        title: Statuscode schema.
+        description: An explanation about the purpose of this instance.
+        default: S000
+      message:
+        type: string
+        title: Message schema.
+        description: An explanation about the purpose of this instance.
+        default: success
+      tid:
+        type: string
+        title: Tid schema.
+        description: An explanation about the purpose of this instance.
+        default: 07B9B009655045E4B74FE83A7B97719E
+      data:
+        type: object
+        title: Data schema.
+        description: An explanation about the purpose of this instance.
+        properties:
+          accountnumber:
+            type: string
+            title: Accountnumber schema.
+            description: An explanation about the purpose of this instance.
+            default: '303623001'
+          subaccountnumber:
+            type: string
+            title: Subaccountnumber schema.
+            description: An explanation about the purpose of this instance.
+            default: '1'
+          monthlyrate:
+            type: string
+            title: Monthlyrate schema.
+            description: An explanation about the purpose of this instance.
+            default: '93.00'
+          monthlytaxes:
+            type: string
+            title: Monthlytaxes schema.
+            description: An explanation about the purpose of this instance.
+            default: '3.73'
+          monthlyratewithtaxes:
+            type: string
+            title: Monthlyratewithtaxes schema.
+            description: An explanation about the purpose of this instance.
+            default: '96.73'
+          actualdayspastdue:
+            type: string
+            title: Actualdayspastdue schema.
+            description: An explanation about the purpose of this instance.
+            default: '0'
+          statementbalance:
+            type: string
+            title: Statementbalance schema.
+            description: An explanation about the purpose of this instance.
+            default: '95.67'
+          totalbalancedue:
+            type: string
+            title: Totalbalancedue schema.
+            description: An explanation about the purpose of this instance.
+            default: '-956.52'
+          currentbalance:
+            type: string
+            title: Currentbalance schema.
+            description: An explanation about the purpose of this instance.
+            default: '-956.52'
+          paymentduedate:
+            type: string
+            title: Paymentduedate schema.
+            description: An explanation about the purpose of this instance.
+            default: '2014-08-06'
+          adjustedbalance:
+            type: string
+            title: Adjustedbalance schema.
+            description: An explanation about the purpose of this instance.
+            default: '-1976.9'
+          isrecurringpayment:
+            type: boolean
+            title: Isrecurringpayment schema.
+            description: An explanation about the purpose of this instance.
+            default: false
+          hasmultiplestatements:
+            type: boolean
+            title: Hasmultiplestatements schema.
+            description: An explanation about the purpose of this instance.
+            default: true
+          ispaperless:
+            type: boolean
+            title: Ispaperless schema.
+            description: An explanation about the purpose of this instance.
+            default: false
+          statementemailandpaper:
+            type: boolean
+            title: Statementemailandpaper schema.
+            description: An explanation about the purpose of this instance.
+            default: false
+          statementhistory:
+            type: array
+            title: Statementhistory schema.
+            description: An explanation about the purpose of this instance.
+            items:
+              type: object
+              title: 1 schema.
+              description: An explanation about the purpose of this instance.
+              properties:
+                statementamt:
+                  type: string
+                  title: Statementamt schema.
+                  description: An explanation about the purpose of this instance.
+                  default: '95.67'
+                statementdate:
+                  type: string
+                  title: Statementdate schema.
+                  description: An explanation about the purpose of this instance.
+                  default: '2014-06-17'
+                duedate:
+                  type: string
+                  title: Duedate schema.
+                  description: An explanation about the purpose of this instance.
+                  default: '22'
+                cyclebillfromdate:
+                  type: string
+                  title: Cyclebillfromdate schema.
+                  description: An explanation about the purpose of this instance.
+                  default: '2014-06-22'
+                cyclebilltodate:
+                  type: string
+                  title: Cyclebilltodate schema.
+                  description: An explanation about the purpose of this instance.
+                  default: '2014-07-21'
+              required:
+                - statementamt
+                - statementdate
+                - duedate
+                - cyclebillfromdate
+                - cyclebilltodate
+          paymenthistory:
+            type: array
+            title: Paymenthistory schema.
+            description: An explanation about the purpose of this instance.
+            items:
+              type: object
+              title: 94 schema.
+              description: An explanation about the purpose of this instance.
+              properties:
+                paymentamt:
+                  type: string
+                  title: Paymentamt schema.
+                  description: An explanation about the purpose of this instance.
+                  default: '11.18'
+                paymenttype:
+                  type: string
+                  title: Paymenttype schema.
+                  description: An explanation about the purpose of this instance.
+                  default: PENDING
+                methodofpayment:
+                  type: string
+                  title: Methodofpayment schema.
+                  description: An explanation about the purpose of this instance.
+                  default: EASYPAY (EFT)
+                paymentdate:
+                  type: string
+                  title: Paymentdate schema.
+                  description: An explanation about the purpose of this instance.
+                  default: '2014-09-03'
+                paymentondate:
+                  type: integer
+                  title: Paymentondate schema.
+                  description: An explanation about the purpose of this instance.
+                  default: 1409702400000
+              required:
+                - paymentamt
+                - paymenttype
+                - methodofpayment
+                - paymentdate
+                - paymentondate
+          recentactivity:
+            type: array
+            title: Recentactivity schema.
+            description: An explanation about the purpose of this instance.
+            items:
+              type: object
+              title: 1 schema.
+              description: An explanation about the purpose of this instance.
+              properties:
+                code:
+                  type: string
+                  title: Code schema.
+                  description: An explanation about the purpose of this instance.
+                  default: P
+                fromdate:
+                  type: string
+                  title: Fromdate schema.
+                  description: An explanation about the purpose of this instance.
+                  default: '2015-01-12'
+                todate:
+                  type: string
+                  title: Todate schema.
+                  description: An explanation about the purpose of this instance.
+                  default: '2015-01-17'
+                desc:
+                  type: string
+                  title: Desc schema.
+                  description: An explanation about the purpose of this instance.
+                  default: WSC AMERICAN EXPRESS
+                categorycode:
+                  type: string
+                  title: Categorycode schema.
+                  description: An explanation about the purpose of this instance.
+                  default: C
+                amount:
+                  type: string
+                  title: Amount schema.
+                  description: An explanation about the purpose of this instance.
+                  default: '-101.01'
+                tax:
+                  type: string
+                  title: Tax schema.
+                  description: An explanation about the purpose of this instance.
+                  default: '0.00'
+              required:
+                - code
+                - fromdate
+                - todate
+                - desc
+                - categorycode
+                - amount
+                - tax
+          paymenttypes:
+            type: 'null'
+            title: Paymenttypes schema.
+            description: An explanation about the purpose of this instance.
+            default: null
+          statementBillCycleDay:
+            type: string
+            title: StatementBillCycleDay schema.
+            description: An explanation about the purpose of this instance.
+            default: '22'
+          statementBillFromDate:
+            type: string
+            title: StatementBillFromDate schema.
+            description: An explanation about the purpose of this instance.
+            default: '2014-07-22'
+          statementBillToDate:
+            type: string
+            title: StatementBillToDate schema.
+            description: An explanation about the purpose of this instance.
+            default: '2014-08-21'
+          statementMethod:
+            type: string
+            title: StatementMethod schema.
+            description: An explanation about the purpose of this instance.
+            default: EBPP - PAPER ONLY
+          isPastDue:
+            type: boolean
+            title: IsPastDue schema.
+            description: An explanation about the purpose of this instance.
+            default: false
+          accountsReceivablesTotalOver30Days:
+            type: string
+            title: AccountsReceivablesTotalOver30Days schema.
+            description: An explanation about the purpose of this instance.
+            default: '171.1'
+          accountsReceivablesTotal:
+            type: string
+            title: AccountsReceivablesTotal schema.
+            description: An explanation about the purpose of this instance.
+            default: '296.87'
+        required:
+          - accountnumber
+          - subaccountnumber
+          - monthlyrate
+          - monthlytaxes
+          - monthlyratewithtaxes
+          - actualdayspastdue
+          - statementbalance
+          - totalbalancedue
+          - currentbalance
+          - paymentduedate
+          - adjustedbalance
+          - isrecurringpayment
+          - hasmultiplestatements
+          - ispaperless
+          - statementemailandpaper
+          - statementhistory
+          - paymenthistory
+          - recentactivity
+          - paymenttypes
+          - statementBillCycleDay
+          - statementBillFromDate
+          - statementBillToDate
+          - statementMethod
+          - isPastDue
+          - accountsReceivablesTotalOver30Days
+          - accountsReceivablesTotal
+    required:
+      - statuscode
+      - message
+      - tid
+      - data
+  BillingSettingsResponse:
+    type: object
+    title: Billing settings response schema.
+    description: An explanation about the purpose of this instance.
+    properties:
+      statuscode:
+        type: string
+        title: Statuscode schema.
+        description: An explanation about the purpose of this instance.
+        default: S000
+      message:
+        type: string
+        title: Message schema.
+        description: An explanation about the purpose of this instance.
+        default: Success
+      data:
+        type: object
+        title: Data schema.
+        description: An explanation about the purpose of this instance.
+        properties:
+          paperlessType:
+            type: string
+            title: PaperlessType schema.
+            description: An explanation about the purpose of this instance.
+            default: P
+            enum:
+              - E
+              - P
+              - M
+              - '1'
+              - '9'
+          autoPaymentType:
+            type: string
+            title: AutoPaymentType schema.
+            description: An explanation about the purpose of this instance.
+            default: D
+            enum:
+              - A
+              - D
+        required:
+          - paperlessType
+          - autoPaymentType
+    required:
+      - statuscode
+      - message
+      - data
+  PDFStatementList:
+    type: object
+    title: Statement list schema.
+    description: An explanation about the purpose of this instance.
+    properties:
+      statuscode:
+        type: string
+        title: Statuscode schema.
+        description: An explanation about the purpose of this instance.
+        default: S000
+      message:
+        type: string
+        title: Message schema.
+        description: An explanation about the purpose of this instance.
+        default: success
+      tid:
+        type: string
+        title: Tid schema.
+        description: An explanation about the purpose of this instance.
+        default: B657B65C5CDF464685366B3B3B03F414
+      data:
+        type: object
+        title: Data schema.
+        description: An explanation about the purpose of this instance.
+        properties:
+          statementlist:
+            type: array
+            title: Statementlist schema.
+            description: An explanation about the purpose of this instance.
+            items:
+              type: object
+              title: Statement schema.
+              description: An explanation about the purpose of this instance.
+              properties:
+                statementdate:
+                  type: string
+                  title: Statementdate schema.
+                  description: An explanation about the purpose of this instance.
+                  default: '2014-01-12'
+                documentid:
+                  type: string
+                  title: Documentid schema.
+                  description: An explanation about the purpose of this instance.
+                  default: '327057'
+              required:
+                - statementdate
+                - documentid
+        required:
+          - statementlist
+    required:
+      - statuscode
+      - message
+      - tid
+      - data

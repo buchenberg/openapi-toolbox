@@ -1,0 +1,26 @@
+version: '2'
+services:
+  oat:
+    build:
+      context: .
+    command: [node_modules/.bin/nodemon, --debug=5858, server.js]
+    container_name: oat-dev
+    ports:
+      - 3000:3000
+    environment:
+      - UI_PORT=3001
+      - API_PORT=3000
+    volumes:
+      - .:/app/
+      - /app/node_modules
+    links:
+      - db
+    depends_on:
+      - db
+  db:
+    image: mongo:3
+    container_name: oat-db
+    ports: 
+      - 27017:27017
+    volumes:
+      - ./data/db:/data/db

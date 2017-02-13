@@ -6,15 +6,9 @@ const mongoose = require('mongoose');
 const Config = require('./config');
 const SwaggerEditor = require('./modules/swagger-editor');
 const SwaggerStore = require('./modules/swagger-store');
+require('dotenv').config()
 
-//connect to mongo for everyone - joy for all
-const dbUrl = `mongodb://${Config.db.host}:${Config.db.port}/oat`
 
-mongoose.connect(dbUrl, {}, (err) => {
-    if (err) {
-        throw err;
-    }
-});
 
 
 
@@ -32,11 +26,11 @@ const server = new Hapi.Server({
 server.connection({ port: 3000 });
 
 server.register([
-    Inert, 
-    Blipp, 
-    SwaggerEditor, 
+    Inert,
+    Blipp,
+    SwaggerEditor,
     SwaggerStore
-    ], () => {});
+], () => { });
 
 
 server.start((err) => {
@@ -46,4 +40,7 @@ server.start((err) => {
     }
 
     console.log('Server running at:', server.info.uri);
+
+    
+
 });

@@ -29,7 +29,7 @@
     "twitter.yaml"
   ],
   "autocompleteExtension": {},
-  "useBackendForStorage": true,
+  "useBackendForStorage": false,
   "backendThrottle": 200,
   "keyPressDebounceTime": 200,
   "backendEndpoint": "/api/spec",

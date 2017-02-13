@@ -3,6 +3,7 @@ services:
   oat:
     build:
       context: .
+      dockerfile: ./.docker/oat/Dockerfile
     command: [node_modules/.bin/nodemon, --debug=5858, server.js]
     container_name: oat-dev
     ports:
@@ -14,13 +15,35 @@ services:
       - .:/app/
       - /app/node_modules
     links:
-      - db
+      - gitlab
     depends_on:
-      - db
-  db:
-    image: mongo:3
-    container_name: oat-db
-    ports: 
-      - 27017:27017
+      - gitlab
+  gitlab:
+    # build:
+    #   context: .
+    #   dockerfile: ./.docker/gitlab/Dockerfile
+    image: gitlab/gitlab-ce:latest
+    container_name: gitlab
+    restart: always
+    ports:
+      - 81:80
     volumes:
-      - ./data/db:/data/db
+      - '/etc/gitlab'
+      - '/var/log/gitlab'
+      - '/var/opt/gitlab'
+
+
+  # db:
+  #   image: mongo:3
+  #   container_name: oat-db
+  #   ports: 
+  #     - 27017:27017
+  #   volumes:
+  #     - ./data/db:/data/db
+
+  # sudo docker run --detach \
+  #   --hostname gitlab.example.com \
+  #   --publish 443:443 --publish 80:80 --publish 22:22 \
+  #   --name gitlab \
+  #   --restart always \
+  #   gitlab/gitlab-ce:latest

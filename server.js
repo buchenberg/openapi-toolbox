@@ -41,6 +41,8 @@ server.start((err) => {
 
     console.log('Server running at:', server.info.uri);
 
+    console.log('Env:', JSON.stringify(process.env));
+
     
 
 });

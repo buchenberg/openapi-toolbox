@@ -15,6 +15,8 @@ module.exports = {
 
             const apiUrl = `http://gitlab/api/v3/projects`
 
+            console.log(process.env.GITLAB_TOKEN)
+
             wreck.get(apiUrl, (err, res, payload) => {
                 reply(JSON.parse(payload))
             });

@@ -14,9 +14,7 @@ module.exports = {
     config: {
         handler: (request, reply) => {
 
-            const apiUrl = `${process.env.GITLAB_API_URL}\
-/projects/${request.params.projectId}\
-/repository/tree`
+            const apiUrl = `${process.env.GITLAB_API_URL}/projects/${request.params.projectId}/repository/tree`
 
             wreck.get(apiUrl, (err, res, payload) => {
                 reply(JSON.parse(payload))

@@ -8,9 +8,6 @@ services:
     container_name: oat-dev
     ports:
       - 3000:3000
-    environment:
-      - UI_PORT=3001
-      - API_PORT=3000
     volumes:
       - .:/app/
       - /app/node_modules
@@ -24,6 +21,7 @@ services:
     #   dockerfile: ./.docker/gitlab/Dockerfile
     image: gitlab/gitlab-ce:latest
     container_name: gitlab
+    hostname: gitlab.docker
     restart: always
     ports:
       - 81:80
@@ -31,8 +29,6 @@ services:
       - '/etc/gitlab'
       - '/var/log/gitlab'
       - '/var/opt/gitlab'
-
-
   # db:
   #   image: mongo:3
   #   container_name: oat-db

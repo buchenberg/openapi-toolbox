@@ -2,7 +2,6 @@
 
 const glob = require('glob')
 const path = require('path')
-const config = require('./config')
 
 
 exports.register = function (server, options, next) {

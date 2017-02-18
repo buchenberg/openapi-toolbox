@@ -1,5 +1,5 @@
 'use strict';
-const Boom = require('boom')
+
 const Wreck = require('wreck')
 
 const wreck = Wreck.defaults({
@@ -15,7 +15,7 @@ module.exports = {
         handler: (request, reply) => {
 
             if (request.query.filepath && request.query.ref) {
-                const apiUrlBase = `${process.env.GITLAB_API_URL}/projects/${request.params.projectId}/repository/files?`
+                const apiUrlBase = `${process.env.GITLAB_BASE_URL}/projects/${request.params.projectId}/repository/files?`
                 const apiUrlParams = `branch_name=${request.query.branch_name}&file_path=${request.query.filepath}&ref=${request.query.ref}`
                 const apiUrl = `${apiUrlBase}${apiUrlParams}`
                 wreck.get(apiUrl, (err, res, payload) => {

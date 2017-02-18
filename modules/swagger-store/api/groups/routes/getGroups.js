@@ -12,7 +12,7 @@ module.exports = {
                     const headers = {
                         'PRIVATE-TOKEN': process.env.GITLAB_TOKEN
                     }
-                    const apiUrl = `${process.env.GITLAB_API_URL}/groups`
+                    const apiUrl = `${process.env.GITLAB_BASE_URL}/groups`
                     callback(null, apiUrl, headers);
                 },
                 passThrough: true

@@ -12,7 +12,7 @@ module.exports = {
                     const headers = {
                         'PRIVATE-TOKEN': process.env.GITLAB_TOKEN
                     }
-                    const apiUrlBase = `${process.env.GITLAB_API_URL}/projects/${request.params.projectId}/repository/blobs/${request.params.sha}?`
+                    const apiUrlBase = `${process.env.GITLAB_BASE_URL}/projects/${request.params.projectId}/repository/blobs/${request.params.sha}?`
                     const apiUrlParams = `filepath=${request.query.filepath}`
                     const apiUrl = `${apiUrlBase}${apiUrlParams}`
                     callback(null, apiUrl, headers);
